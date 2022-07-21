@@ -6,6 +6,10 @@ todos = [
     { "label": "My second task", "done": False }
 ]
 
+@app.route('/hello', methods=['GET'])
+def hello_world():
+    return "<h1>Hello!</h1>"
+
 @app.route('/todos', methods=['GET'])
 def todos_list():
     json_text = jsonify(todos)
@@ -13,10 +17,8 @@ def todos_list():
 
 @app.route('/todos', methods=['POST'])
 def add_new_todo():
-    request_body = request.data # { "done": true, "label": "Sample Todo 2" }
-    decoded_object = json.loads(request_body) #Para decodificar cualquier string json y convertirlo a un objeto de python podemos usar esta función
-    #también se podría hacer con request.json
-    todos.append(decoded_object)
+    request_body = request.get_json(force=True) # { "done": true, "label": "Sample Todo 2" }
+    todos.append(request_body)
     print("Incoming request with the following body", request_body)
     return jsonify(todos) #REST APIs have to return data in JSON format
 
